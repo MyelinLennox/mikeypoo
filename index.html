@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #121212;
+            color: white;
+        }
+        .audio-control {
+            margin: 15px;
+        }
+        #timeline {
+            width: 80%;
+            margin: 20px 0;
+            accent-color: #1DB954;
+        }
+        #audio-container {
+            width: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        button {
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #17a74b;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex; align-items: center; justify-content: center; flex-direction: column; width: 100%;">
+        <h1>mikeys a BITCH</h1>
+        <div style="height: 10px;"></div>
+        <button onclick="toggleAllAudio()">Play/Pause</button>
+        <div style="height: 10px;"></div>
+    </div>
+        <img src="gph.png" alt="Image" style="margin-left: 47% ; width: 200px;">
+    </div>
+    
+
+    <input type="range" id="timeline" min="0" value="0" step="1" oninput="seekAudio(this.value)">
+
+    <div id="audio-container">
+        <div class="audio-control">
+            <label>Vocals</label>
+            <input type="range" min="0" max="1" step="0.01" value="0.65" oninput="setVolume(0, this.value)" style="width: 100%; height: 30px;">
+        </div>
+        <div class="audio-control">
+            <label>Drums</label>
+            <input type="range" min="0" max="1" step="0.01" value="1" oninput="setVolume(1, this.value)" style="width: 100%; height: 30px;">
+        </div>
+        <div class="audio-control">
+            <label>Bass</label>
+            <input type="range" min="0" max="1" step="0.01" value="1" oninput="setVolume(2, this.value)" style="width: 100%; height: 30px;">
+        </div>
+        <div class="audio-control">
+            <label>Others</label>
+            <input type="range" min="0" max="1" step="0.01" value="1" oninput="setVolume(3, this.value)" style="width: 100%; height: 30px;">
+        </div>
+    </div>
+    </div>
+    <script>
+        const audioFiles = ["vocals.wav", "drums.wav", "bass.wav", "others.wav"];
+        const audioElements = audioFiles.map(file => new Audio(file));
+        let isPlaying = false;
+
+        // Set default volumes on load
+        audioElements.forEach((audio, index) => {
+            audio.volume = index === 0 ? 0.65 : 1;
+        });
+
+        function toggleAllAudio() {
+            if (isPlaying) {
+                audioElements.forEach(audio => audio.pause());
+            } else {
+                audioElements.forEach(audio => audio.play());
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function setVolume(index, volume) {
+            audioElements[index].volume = volume;
+        }
+
+        function seekAudio(value) {
+            audioElements.forEach(audio => {
+                audio.currentTime = value;
+            });
+        }
+
+        audioElements[0].addEventListener("timeupdate", () => {
+            document.getElementById("timeline").max = audioElements[0].duration;
+            document.getElementById("timeline").value = audioElements[0].currentTime;
+        });
+    </script>
+</body>
+</html>
